@@ -1,7 +1,7 @@
-import { getCommands } from "./commands.js";
+import { State } from "./state";
 
-export function commandHelp() {
-  const commands = getCommands();
+export function commandHelp(state: State) {
+  const commands = state.commands;
   console.log("Welcome to the Pokedex!");
   console.log("Usage:\n");
 
