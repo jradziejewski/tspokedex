@@ -13,22 +13,22 @@ export type CLICommand = {
 };
 
 export type State = {
-  pokeapi: PokeAPI;
   rl: Interface;
   commands: Record<string, CLICommand>;
+  pokeapi: PokeAPI;
   nextLocationsURL: string | null;
   prevLocationsURL: string | null;
 };
 
 export function initState(): State {
   return {
-    pokeapi: new PokeAPI(),
     rl: createInterface({
       input: process.stdin,
       output: process.stdout,
       prompt: "Pokedex > ",
     }),
     commands: getCommands(),
+    pokeapi: new PokeAPI(),
     nextLocationsURL: null,
     prevLocationsURL: null,
   };
