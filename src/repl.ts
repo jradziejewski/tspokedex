@@ -1,6 +1,6 @@
 import { State } from "./state.js";
 
-export function startREPL(state: State) {
+export async function startREPL(state: State) {
   const { rl, commands } = state;
 
   rl.prompt();
@@ -14,7 +14,7 @@ export function startREPL(state: State) {
       try {
         const cmdName = words[0];
         const cmd = commands[cmdName];
-        cmd.callback(state);
+        await cmd.callback(state);
         rl.prompt();
       } catch {
         console.log("Unknown command");
