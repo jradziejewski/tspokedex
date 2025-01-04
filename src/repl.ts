@@ -10,16 +10,23 @@ export async function startREPL(state: State) {
     if (words.length === 0) {
       rl.prompt();
       return;
-    } else {
-      try {
-        const cmdName = words[0];
-        const cmd = commands[cmdName];
-        await cmd.callback(state);
-        rl.prompt();
-      } catch {
-        console.log("Unknown command");
-        rl.prompt();
-      }
+    }
+
+    const cmdName = words[0];
+    const cmd = commands[cmdName];
+    if (!cmd) {
+      console.log(
+        `Unknown command: "${cmdName}". Type "help" for a list of commands.`,
+      );
+      rl.prompt();
+      return;
+    }
+
+    try {
+      await cmd.callback(state);
+    } catch (e) {
+      console.log((e as Error).message);
+      rl.prompt();
     }
   });
 }
