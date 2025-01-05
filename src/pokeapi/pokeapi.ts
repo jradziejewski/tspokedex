@@ -1,5 +1,5 @@
 import { Cache } from "./pokecache.js";
-import { ShallowLocations } from "./types.js";
+import { type ShallowLocations, type LocationDetails } from "./types.js";
 
 export class PokeAPI {
   private static readonly baseURL = "https://pokeapi.co/api/v2";
@@ -27,6 +27,30 @@ export class PokeAPI {
     const data: ShallowLocations = await response.json();
 
     this.#cache.add<ShallowLocations>(url, data);
+
+    return data;
+  }
+
+  async fetchLocation(name: string): Promise<LocationDetails> {
+    const url = `${PokeAPI.baseURL}/location-area/${name}`;
+    const cached = this.#cache.get<LocationDetails>(url);
+
+    if (cached !== undefined) {
+      return cached;
+    }
+
+    const response = await fetch(url, {
+      method: "GET",
+      mode: "cors",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Non-200 status code ${response.status}`);
+    }
+
+    const data: LocationDetails = await response.json();
+
+    this.#cache.add<LocationDetails>(url, data);
 
     return data;
   }
