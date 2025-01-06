@@ -9,6 +9,7 @@ import { commandExplore } from "./command_explore.js";
 import { commandCatch } from "./command_catch.js";
 import { type Pokemon } from "./pokeapi/types.js";
 import { commandInspect } from "./command_inspect.js";
+import { commandPokedex } from "./command_pokedex.js";
 
 export type CLICommand = {
   name: string;
@@ -76,6 +77,11 @@ function getCommands(): Record<string, CLICommand> {
       name: "inspect <pokemon_name>",
       description: "Inspect a Pokemon (only if you already caught it)",
       callback: commandInspect,
+    },
+    pokedex: {
+      name: "pokedex",
+      description: "Inspect your Pokedex",
+      callback: commandPokedex,
     },
   };
 }
