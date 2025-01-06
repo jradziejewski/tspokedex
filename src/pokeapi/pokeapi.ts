@@ -1,5 +1,9 @@
 import { Cache } from "./pokecache.js";
-import { type ShallowLocations, type LocationDetails } from "./types.js";
+import {
+  type ShallowLocations,
+  type ShallowLocation,
+  type Pokemon,
+} from "./types.js";
 
 export class PokeAPI {
   private static readonly baseURL = "https://pokeapi.co/api/v2";
@@ -31,9 +35,9 @@ export class PokeAPI {
     return data;
   }
 
-  async fetchLocation(name: string): Promise<LocationDetails> {
+  async fetchLocation(name: string): Promise<ShallowLocation> {
     const url = `${PokeAPI.baseURL}/location-area/${name}`;
-    const cached = this.#cache.get<LocationDetails>(url);
+    const cached = this.#cache.get<ShallowLocation>(url);
 
     if (cached !== undefined) {
       return cached;
@@ -48,9 +52,33 @@ export class PokeAPI {
       throw new Error(`Non-200 status code ${response.status}`);
     }
 
-    const data: LocationDetails = await response.json();
+    const data: ShallowLocation = await response.json();
 
-    this.#cache.add<LocationDetails>(url, data);
+    this.#cache.add<ShallowLocation>(url, data);
+
+    return data;
+  }
+
+  async fetchPokemon(name: string): Promise<Pokemon> {
+    const url = `${PokeAPI.baseURL}/pokemon/${name}`;
+    const cached = this.#cache.get<Pokemon>(url);
+
+    if (cached !== undefined) {
+      return cached;
+    }
+
+    const response = await fetch(url, {
+      method: "GET",
+      mode: "cors",
+    });
+
+    if (!response.ok) {
+      throw new Error(`Non-200 status code ${response.status}`);
+    }
+
+    const data: Pokemon = await response.json();
+
+    this.#cache.add<Pokemon>(url, data);
 
     return data;
   }
